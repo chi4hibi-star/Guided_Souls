@@ -1,0 +1,14 @@
+{
+    "volume": 80.21,
+    "resolution": [
+        1280,
+        720
+    ],
+    "controls": {
+        "move_up": "w",
+        "move_left": "a",
+        "move_down": "s",
+        "move_right": "d",
+        "attack": "space"
+    }
+}
