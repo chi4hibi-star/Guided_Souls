@@ -1,5 +1,5 @@
 from settings import pg
-from gameplay.graphic import Graphic
+from sprites.graphic import Graphic
 
 class Player(Graphic):
     def __init__(self,pos,screen_width):

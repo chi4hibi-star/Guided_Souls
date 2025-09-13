@@ -4,6 +4,7 @@ from scenes.settings_scene import SettingsScene
 from scenes.statistics_scene import StatisticsScene
 from scenes.gameplay_scene import GamePlayScene
 from scenes.level_selection import LevelSelectionScene
+from sprites.graphics_loader import Graphics_Loader
 
 class Game():
     def __init__(self):
@@ -45,6 +46,7 @@ class Game():
             self.running = False
 
     def save_settings_callback(self):
+        del self.graphics_loader
         del self.main_menu_scene
         del self.settings_scene
         del self.statitics_scene
@@ -56,6 +58,8 @@ class Game():
 
     def new_scenes(self):
         self.display_surface = pg.display.set_mode(self.settings.saved_settings["resolution"])
+        self.graphics_loader = Graphics_Loader()
+        self.graphics_loader.scale_all(1) #1 is scale
         self.main_menu_scene = MainMenuScene(self.settings,switch_scene_callback=self.switch_scene)
         self.settings_scene = SettingsScene(self.settings,switch_scene_callback=self.switch_scene,
                                             save_settings_callback=self.save_settings_callback)
