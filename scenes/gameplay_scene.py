@@ -5,20 +5,19 @@ from gameplay.enemy_controller import EnemyController
 from gameplay.ground import Ground
 
 class GamePlayScene(BaseScene):
-    def __init__(self,settings,switch_scene_callback):
+    def __init__(self,settings,graphics_loader,switch_scene_callback):
         self.settings = settings
         self.switch_scene_backback = switch_scene_callback
 
         window_width, window_height = self.settings.saved_settings["resolution"]
         self.clock = pg.time.Clock()
         self.dt = self.clock.tick(50) / 1000.0
-
-        self.player = Player(pos=(window_width/2, window_height/2),screen_width=window_width)
+        self.player = Player(pos=(window_width/2, window_height/2),sprites=graphics_loader["charon"])
         #self.enemy_controller = EnemyController(pos=(window_width/2,window_height/2),screen_width=window_width)
-        self.ground = Ground((window_width,window_height))
+        self.ground = Ground((window_width,window_height),sprites=graphics_loader["ground"])
 
         self.player_direction = pg.math.Vector2()
-        self.player_speed = 80
+        self.player_speed = 10
         self.move = False
 
     def handle_events(self, events):
