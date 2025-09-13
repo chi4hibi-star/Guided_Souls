@@ -59,13 +59,13 @@ class Game():
     def new_scenes(self):
         self.display_surface = pg.display.set_mode(self.settings.saved_settings["resolution"])
         self.graphics_loader = Graphics_Loader()
-        self.graphics_loader.scale_all(1) #1 is scale
+        self.graphics_loader.scale_all(self.settings.saved_settings["resolution"])
         self.main_menu_scene = MainMenuScene(self.settings,switch_scene_callback=self.switch_scene)
         self.settings_scene = SettingsScene(self.settings,switch_scene_callback=self.switch_scene,
                                             save_settings_callback=self.save_settings_callback)
         self.statitics_scene = StatisticsScene()
         self.level_selection = LevelSelectionScene(self.settings,switch_scene_callback=self.switch_scene)
-        self.game_play_scene = GamePlayScene(self.settings,switch_scene_callback = self.switch_scene)
+        self.game_play_scene = GamePlayScene(self.settings,self.graphics_loader.graphics,switch_scene_callback = self.switch_scene)
 
 if __name__ =='__main__':
     game = Game()

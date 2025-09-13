@@ -1,14 +1,13 @@
 #from settings import pg
 from sprites.graphic import Graphic
 
-class Ground(Graphic):
-    def __init__(self,screen_size):
+class Ground():
+    def __init__(self,screen_size,sprites):
         self.screen_width,self.screen_height = screen_size
-        super().__init__(["sprites","ground","2.png"],self.screen_width,single=True,size_divider=5)
-
+        self.image = sprites[1]
         self.image_width,self.image_height = self.image.get_size()
-        tiles_x = int(self.screen_width/self.image_width)+2
-        tiles_y = int(self.screen_height/self.image_height)+2
+        tiles_x = self.screen_width//self.image_width+2
+        tiles_y = self.screen_height//self.image_height+2
         offset_x = -(tiles_x * self.image_width - self.screen_width) // 2
         offset_y = -(tiles_y * self.image_height - self.screen_height) // 2
 

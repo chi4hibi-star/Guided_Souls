@@ -3,19 +3,28 @@ from os.path import join, basename, relpath
 from os import walk, sep
 
 class Graphics_Loader():
-    def __init__(self,base_path = "sprites"):
+    def __init__(self, base_path="sprites"):
         self.graphics = {}
-        for folder_path, _, file_names in walk(base_path):
-            rel_path = relpath(folder_path,base_path)
+        for folder, _, files in walk(base_path):
+            rel_path = relpath(folder, base_path)
             parts = [] if rel_path == "." else rel_path.split(sep)
 
-            for p in parts:
-                self.graphics = self.graphics.setdefault(p,{})
+            current = self.graphics
+            for p in parts[:-1]:
+                current = current.setdefault(p, {})
+            
+            if parts:  # wenn Unterordner existiert
+                last_part = parts[-1]
+                png_files = sorted(f for f in files if f.lower().endswith(".png"))
+                if png_files:
+                    current[last_part] = [pg.image.load(join(folder, f)).convert_alpha() for f in png_files]
+                else:
+                    current.setdefault(last_part, {})
+            else:  # base_path selbst
+                png_files = sorted(f for f in files if f.lower().endswith(".png"))
+                if png_files:
+                    self.graphics = [pg.image.load(join(folder, f)).convert_alpha() for f in png_files]
 
-            for f in file_names:
-                if f.lower().endswith(".png"):
-                    file_path = join(folder_path,f)
-                    self.graphics[f] = pg.image.load(file_path).convert_alpha()
 
     def pixel_scale(self,image,scale):
         image_width, image_height = image.get_size()
@@ -28,11 +37,12 @@ class Graphics_Loader():
                         new_image.set_at((x * scale + dx, y * scale + dy),color)
         return new_image
     
-    def scale_all(self, scale):
-        def recurse(d):
-            for k, v in d.items():
-                if isinstance(v, dict):
-                    recurse(v)
-                elif isinstance(v,pg.Surface):
-                    d[k] = self.pixel_scale(v, scale)
+    def scale_all(self, resolution):
+        scale = max(1,(resolution[0] // 320)-2)
+        def recurse(directory):
+            for index, sub_directory_or_item in directory.items():
+                if isinstance(sub_directory_or_item, dict):
+                    recurse(sub_directory_or_item)
+                elif isinstance(sub_directory_or_item,pg.Surface):
+                    directory[index] = self.pixel_scale(sub_directory_or_item, scale)
         recurse(self.graphics)
